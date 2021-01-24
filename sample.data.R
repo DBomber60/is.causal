@@ -101,4 +101,4 @@ xobs <- xobs[1:nobs,]
 
 observed.data = data.frame(cbind(y=yobs, xobs, z))
 names(observed.data) = c("Y", paste("X", rep(1:3, each = 5), 1:5, sep=""), paste("Z",1:3, sep=""))
-write.csv2(observed.data, file = "saerela.csv")
+write.csv(observed.data, file = "saerela.csv")

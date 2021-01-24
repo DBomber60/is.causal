@@ -53,8 +53,11 @@ wbayes = num/den
 hist(wbayes, breaks = 100, xlim = c(0,10))
 
 
-
+smalldat = select(obs, Y, Z1, Z2, Z3) 
+smalldat$s = with(smalldat, Z1 + Z2 + Z3)
 
 z = rgamma(n, shape = 1)
 q = z/sum(z)
 
+
+summary(glm(Y~s, data = smalldat, weights = wbayes, family = quasibinomial))
