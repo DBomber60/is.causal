@@ -101,4 +101,35 @@ xobs <- xobs[1:nobs,]
 
 observed.data = data.frame(cbind(y=yobs, xobs, z))
 names(observed.data) = c("Y", paste("X", rep(1:3, each = 5), 1:5, sep=""), paste("Z",1:3, sep=""))
-write.csv(observed.data, file = "saerela.csv")
+#write.csv(observed.data, file = "saerela.csv")
+
+
+# IPT weights:
+
+tmodel1 <- glm(z[,1] ~ xobs[,1:ncov], family=binomial(link=logit))
+tmodel2 <- glm(z[,2] ~ xobs[,(ncov+1):(2*ncov)] + z[,1], family=binomial(link=logit))
+tmodel3 <- glm(z[,3] ~ xobs[,(2*ncov+1):(3*ncov)] + z[,1] + z[,2], family=binomial(link=logit))
+lp1 <- cbind(1.0, xobs[,1:ncov]) %*% coef(tmodel1)
+lp2 <- cbind(1.0, xobs[,(ncov+1):(2*ncov)], z[,1]) %*% coef(tmodel2)
+lp3 <- cbind(1.0, xobs[,(2*ncov+1):(3*ncov)], z[,1], z[,2]) %*% coef(tmodel3)
+pt <- (exp(z[,1] * lp1)/(1+exp(lp1))) * 
+  (exp(z[,2] * lp2)/(1+exp(lp2))) *
+  (exp(z[,3] * lp3)/(1+exp(lp3)))
+
+smodel1 <- glm(z[,1] ~ 1, family=binomial(link=logit))
+smodel2 <- glm(z[,2] ~ z[,1], family=binomial(link=logit))
+smodel3 <- glm(z[,3] ~ z[,1] + z[,2], family=binomial(link=logit))
+lp1 <- cbind(rep(1.0, nobs)) %*% coef(smodel1)
+lp2 <- cbind(1.0, z[,1]) %*% coef(smodel2)
+lp3 <- cbind(1.0, z[,1], z[,2]) %*% coef(smodel3)
+sc <- (exp(z[,1] * lp1)/(1+exp(lp1))) * 
+  (exp(z[,2] * lp2)/(1+exp(lp2))) *
+  (exp(z[,3] * lp3)/(1+exp(lp3)))      
+
+iptw <- 1.0/pt
+iptws <- sc * iptw
+
+summary(glm(yobs ~ rowSums(z), family = quasibinomial(), weights = iptws))
+
+
+
