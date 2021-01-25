@@ -23,5 +23,6 @@ iptw <- 1.0/pt
 iptws <- sc * iptw
 dat$s = with(dat, Z1 + Z2 + Z3)
 
-summary(glm(Y ~ s, data = dat, weights = iptws, family = quasibinomial))
+fit = (glm(Y ~ s, data = dat, weights = iptws, family = quasibinomial))
 
+predict(fit, newdata = data.frame(s=0), type = "response")
