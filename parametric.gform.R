@@ -36,10 +36,10 @@ interventions = list( list(c(static, rep(0,3))),
                       list(c(static, rep(1,3))) )  
 int_descript = c('Never', 'Always')
 
-gformula_binary_eof(formatted, id=id, time_name = time_name, covnames = covnames, covtypes = covtypes,
-                    covparams = covparams, histvars = histvars, histories = histories, outcome_name = outcome_name,
-                    ymodel = ymodel, intvars = intvars, interventions = interventions, int_descript = int_descript,
-                    seed = 1)
+#b = gformula_binary_eof(formatted, id=id, time_name = time_name, covnames = covnames, covtypes = covtypes,
+#                    covparams = covparams, histvars = histvars, histories = histories, outcome_name = outcome_name,
+#                    ymodel = ymodel, intvars = intvars, interventions = interventions, int_descript = int_descript,
+#                    seed = 1, nsamples = 500)
 
 # 0.30787258/ 0.03070607
 
