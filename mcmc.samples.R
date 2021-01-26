@@ -66,4 +66,6 @@ for(i in 1:100) {
   res[i] = predict(mod, newdat = data.frame(s=3), type = "response") - predict(mod, newdat = data.frame(s=0), type = "response")
 }
 
-
+res = data.frame(res)
+#names(res) = "b.iptw.res"
+#write.csv(res, "simresults/biptw.csv")
