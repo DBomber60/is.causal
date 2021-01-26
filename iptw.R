@@ -7,7 +7,6 @@ library(boot)
 standard = function(data, indices) {
   d = data[indices,]
   #d$interv = -1
-  
   # IPT weights:
   
   tmodel1 <- glm(Z1 ~ X11 + X12 + X13 + X14 + X15, data = d, family=binomial(link=logit))
@@ -41,7 +40,7 @@ standard = function(data, indices) {
   return(ey111-ey000)
 }
 
-#results <- boot(data = dat, statistic = standard, R = 500)
+#results <- boot(data = dat, statistic = standard, R = 100)
 
 #mean(results$t)
 

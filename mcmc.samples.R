@@ -1,5 +1,5 @@
 # sample from posteriors
-library(rstan)
+library(rstanarm)
 library(tidyverse)
 
 obs = read.csv("saerela.csv")

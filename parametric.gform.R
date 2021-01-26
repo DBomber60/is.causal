@@ -1,5 +1,6 @@
 # parametric g-formula
 library(gfoRmula)
+library(tidyverse)
 
 datg = read.csv("saerela.csv")[,-1]
 head(datg)
@@ -13,7 +14,6 @@ formatted = datg %>% pivot_longer(c(!Y), names_to = c(".value", "set"),
 formatted$id = rep(1:nrow(datg), each = 3) # to-do.. this automatically (using regex)
 formatted$set = as.numeric(formatted$set) - 1
 head(formatted)
-
 
 
 # use gfoRmula package
@@ -36,12 +36,14 @@ interventions = list( list(c(static, rep(0,3))),
                       list(c(static, rep(1,3))) )  
 int_descript = c('Never', 'Always')
 
-#b = gformula_binary_eof(formatted, id=id, time_name = time_name, covnames = covnames, covtypes = covtypes,
-#                    covparams = covparams, histvars = histvars, histories = histories, outcome_name = outcome_name,
-#                    ymodel = ymodel, intvars = intvars, interventions = interventions, int_descript = int_descript,
-#                    seed = 1, nsamples = 500)
+b = gformula_binary_eof(formatted, id=id, time_name = time_name, covnames = covnames, covtypes = covtypes,
+                   covparams = covparams, histvars = histvars, histories = histories, outcome_name = outcome_name,
+                   ymodel = ymodel, intvars = intvars, interventions = interventions, int_descript = int_descript,
+                   seed = 1, nsamples = 10, ref_int = 2)
 
 # 0.30787258/ 0.03070607
+lower = b$result$`MD lower 95% CI`[2] # lower
+upper = b$result$`MD upper 95% CI`[2]
+mean = b$result$`Mean difference`[2]
 
-df <- data.frame(x = c("X11", "X12", "X21", "X22"))
-df %>% separate(x, sep = "([[:upper]])([[:digit:]])(.)", c("A", "B"))
+
