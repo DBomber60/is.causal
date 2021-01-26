@@ -39,11 +39,13 @@ int_descript = c('Never', 'Always')
 b = gformula_binary_eof(formatted, id=id, time_name = time_name, covnames = covnames, covtypes = covtypes,
                    covparams = covparams, histvars = histvars, histories = histories, outcome_name = outcome_name,
                    ymodel = ymodel, intvars = intvars, interventions = interventions, int_descript = int_descript,
-                   seed = 1, nsamples = 10, ref_int = 2)
+                   seed = 1, nsamples = 100, ref_int = 2)
 
 # 0.30787258/ 0.03070607
 lower = b$result$`MD lower 95% CI`[2] # lower
 upper = b$result$`MD upper 95% CI`[2]
 mean = b$result$`Mean difference`[2]
+
+readRDS("gform.RDS")
 
 
