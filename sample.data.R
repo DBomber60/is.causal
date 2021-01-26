@@ -92,6 +92,9 @@ summary(truemodel)
 coef(truemodel)[2]
 vcov(truemodel)[2,2]
 
+predict(truemodel, newdata = data.frame(zlong = 3), type = "response") - 
+  predict(truemodel, newdata = data.frame(zlong = 0), type = "response")
+
 y <- y[,,,1:nobs]
 yobs <- yobs[1:nobs]
 z <- z[1:nobs,]

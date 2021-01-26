@@ -86,7 +86,7 @@ for(j in 1:length(t.model)) {
 
 hist(outcomes[,2] - outcomes[,1])
 
-
-
+cq = outcomes[,2] - outcomes[,1]
+quantile(cq, probs = c(.05, 0.5, 0.95))
 
 
