@@ -52,12 +52,18 @@ den = rowMeans(prod) # conditional treatment model
 wbayes = num/den
 hist(wbayes, breaks = 100, xlim = c(0,10))
 
-
 smalldat = select(obs, Y, Z1, Z2, Z3) 
 smalldat$s = with(smalldat, Z1 + Z2 + Z3)
 
-z = rgamma(n, shape = 1)
-q = z/sum(z)
+nIter = 100
+res = array(NA, dim = c(nIter,1))
+
+for(i in 1:100) {
+  z = rgamma(n, shape = 1)
+  q = z/sum(z)
+  w_adj = wbayes * q
+  mod = (glm(Y~s, data = smalldat, weights = w_adj, family = quasibinomial))
+  res[i] = predict(mod, newdat = data.frame(s=3), type = "response") - predict(mod, newdat = data.frame(s=0), type = "response")
+}
 
 
-summary(glm(Y~s, data = smalldat, weights = wbayes, family = quasibinomial))
