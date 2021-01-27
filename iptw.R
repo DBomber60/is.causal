@@ -40,7 +40,7 @@ standard = function(data, indices) {
   return(ey111-ey000)
 }
 
-resultsip <- boot(data = dat, statistic = standard, R = 100)
+#resultsip <- boot(data = dat, statistic = standard, R = 100)
 
-resip = data.frame(res = (resultsip$t))
-write.csv(resip, file = "simresults/resip.csv")
+#resip = data.frame(res = (resultsip$t))
+#write.csv(resip, file = "simresults/resip.csv")

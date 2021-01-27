@@ -2,25 +2,27 @@
 library(rstanarm)
 library(tidyverse)
 
-obs = read.csv("saerela.csv")
+#obs = read.csv("saerela.csv")
+
+bayes.iptw = function(obs, nIter) {
 n = nrow(obs)
 
-# gamma parameters 
+# gamma parameters for conditional treatment model
 stg.z1.n = stan_glm(Z1 ~ X11 + X12 + X13 + X14 + X15, data = obs, family = binomial)
 stg.z2.n = stan_glm(Z2 ~ Z1 + X21 + X22 + X23 + X24 + X25, data = obs, family = binomial)
 stg.z3.n = stan_glm(Z3 ~ Z2 + X31 + X32 + X33 + X34 + X35, data = obs, family = binomial)
 
-# alpha parameters
+# alpha parameters for marginal treatment model
 stg.z1.d = stan_glm(Z1 ~ 1, data = obs, family = binomial)
 stg.z2.d = stan_glm(Z2 ~ Z1, data = obs, family = binomial)
 stg.z3.d = stan_glm(Z3 ~ Z2 + Z1, data = obs, family = binomial)
 
-# numerator
+# parameter samples from the conditional model
 z1mod.sims = as.matrix(stg.z1.n) # 4k x 1
-z2mod.sims = as.matrix(stg.z2.n) # 4k x 2
-z3mod.sims = as.matrix(stg.z3.n) # 4k x 2
+z2mod.sims = as.matrix(stg.z2.n) # 4k x 7
+z3mod.sims = as.matrix(stg.z3.n) # 4k x 7
 
-# 
+# parameter samples from marginal model
 z1mod0 = as.matrix(stg.z1.d) # 4k x 1
 z2mod0 = as.matrix(stg.z2.d) # 4k x 2
 z3mod0 = as.matrix(stg.z3.d) # 4k x 2
@@ -50,15 +52,15 @@ prod = z1d * z2d * z3d
 den = rowMeans(prod) # conditional treatment model
 
 wbayes = num/den
-hist(wbayes, breaks = 100, xlim = c(0,10))
+#hist(wbayes, breaks = 100, xlim = c(0,10))
 
 smalldat = select(obs, Y, Z1, Z2, Z3) 
 smalldat$s = with(smalldat, Z1 + Z2 + Z3)
 
-nIter = 100
+#nIter = 100
 res = array(NA, dim = c(nIter,1))
 
-for(i in 1:100) {
+for(i in 1:nIter) {
   z = rgamma(n, shape = 1)
   q = z/sum(z)
   w_adj = wbayes * q
@@ -66,6 +68,8 @@ for(i in 1:100) {
   res[i] = predict(mod, newdat = data.frame(s=3), type = "response") - predict(mod, newdat = data.frame(s=0), type = "response")
 }
 
-res = data.frame(res)
+return(data.frame(res))
+
+}
 #names(res) = "b.iptw.res"
 #write.csv(res, "simresults/biptw.csv")
