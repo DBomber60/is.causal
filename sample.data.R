@@ -1,13 +1,18 @@
 # simulate data like Saaerela
 # msmsim('./results0.txt', from=1, to=2, nobs=2000, ncov=5, coeffa=0.3, coeffb=0.3, coeffc=-0.75, effect=-0.25, a0=-1.0, dobayes=TRUE, doboot=TRUE)
 library(mvtnorm)
+source('mcmc.samples.g.R')
 set.seed(1)
+
+# start with a single iteration of simulating data, generate bayesian g formula results
+# msmsim = function(outfile, from=1, to=1000, nobs=500, ncov=5, coeffa, coeffb, coeffc, effect, a0, nboot=100) {
+# 2. generate parametric g-formula
 
 ncov = 5 # number of (time-varying) covariates
 a0=-1
 coeffa=0.3; coeffb=0.3; coeffc=-0.75; effect=-0.25
 nobs=500
-ntot = 1000 # total number of patients
+ntot = 1000 # total number of 'true' observations generated (observed is a subset of this)
 
 x <- array(NA, c(2, 2, ntot, 3 * ncov)) # theoretical matrix/ 3 time periods
 xobs <- matrix(NA, ntot, 3 * ncov) # observed matrix
@@ -92,6 +97,8 @@ summary(truemodel)
 coef(truemodel)[2]
 vcov(truemodel)[2,2]
 
+# true 'causal' parameter
+
 predict(truemodel, newdata = data.frame(zlong = 3), type = "response") - 
   predict(truemodel, newdata = data.frame(zlong = 0), type = "response")
 
@@ -106,6 +113,7 @@ observed.data = data.frame(cbind(y=yobs, xobs, z))
 names(observed.data) = c("Y", paste("X", rep(1:3, each = 5), 1:5, sep=""), paste("Z",1:3, sep=""))
 #write.csv(observed.data, file = "saerela.csv")
 
+# bayesian.gf(dat = observed.data, nIter = 100)
 
 # IPT weights:
 
